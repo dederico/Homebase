@@ -4,6 +4,7 @@ import './App.css';
 const App = () => {
   const [data, setData] = useState({ employees: [], daily_totals: {} });
   const [sortOption, setSortOption] = useState('first_name');
+  const [shiftPlanData, setShiftPlanData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -14,6 +15,7 @@ const App = () => {
       .then(data => {
         console.log('Fetched data:', data);
         setData(data);
+        setShiftPlanData(data.shift_plan_data);
         setIsLoading(false);
       })
       .catch(error => {
@@ -44,6 +46,27 @@ const App = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const parseGeneratedMessage = () => {
+    // Extract the relevant information from the generated message
+    const lines = shiftPlanData.generated_message.split('\n');
+    const employeeLines = lines.slice(2, lines.length - 1); // Exclude first and last lines
+  
+    const employeeHours = {};
+    employeeLines.forEach(line => {
+      const match = line.match(/- (.+): (.+) \(.+ hours\)/);
+      if (match) {
+        const employeeName = match[1];
+        const hours = parseInt(match[2], 10);
+        employeeHours[employeeName] = hours;
+      }
+    });
+  
+    return employeeHours;
+  };
+
+  const employeeHours = parseGeneratedMessage();
+
 
   return (
     <div>
@@ -93,6 +116,12 @@ const App = () => {
           ))}
         </tbody>
       </table>
+      {shiftPlanData && (
+      <div>
+        <h2>Generated Shift Plan</h2>
+        <p>{shiftPlanData.generated_message}</p>
+      </div>
+    )}
     </div>
   );
 };

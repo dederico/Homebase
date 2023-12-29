@@ -1,11 +1,26 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    base64 (0.2.0)
+    dotenv (2.8.1)
+    event_stream_parser (1.0.0)
+    faraday (2.8.1)
+      base64
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (3.0.2)
+    multipart-post (2.3.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     rack (2.2.8)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
+    ruby-openai (6.3.1)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     ruby2_keywords (0.0.5)
     sinatra (3.1.0)
       mustermann (~> 3.0)
@@ -18,10 +33,12 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
+  dotenv
+  ruby-openai
   sinatra
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.1.2p20
 
 BUNDLED WITH
    2.2.3
