@@ -3,16 +3,23 @@ import './App.css';
 
 const App = () => {
   const [data, setData] = useState({ employees: [], daily_totals: {} });
-  const [sortOption, setSortOption] = useState('first_name'); 
+  const [sortOption, setSortOption] = useState('first_name');
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`/shifts?sort_by=${sortOption}`)
       .then(response => response.json())
       .then(data => {
         console.log('Fetched data:', data);
-        setData(data); 
+        setData(data);
+        setIsLoading(false);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      });
   }, [sortOption]);
 
   const handleSortChange = e => {
@@ -33,6 +40,10 @@ const App = () => {
       dailyTotals[day] = (dailyTotals[day] || 0) + duration;
     });
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
